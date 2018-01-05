@@ -1,11 +1,14 @@
+defaults: &defaults
+  docker:
+    - image: ubuntu:xenial
+      environment:
+          LC_ALL: C.UTF-8
+          LANG: C.UTF-8
+
 version: 2
 jobs:
   build:
-    docker:
-      - image: ubuntu:xenial
-        environment:
-          LC_ALL: C.UTF-8
-          LANG: C.UTF-8
+    <<: *defaults
     steps:
       - checkout
       - run:
@@ -14,5 +17,27 @@ jobs:
       - run:
           name: Build snap
           command: snapcraft
-      - store_artifacts:
-          path: '*.snap'
+      - persist_to_workspace:
+          root: .
+          paths: ['*.snap']
+
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Push/release snap
+          command: ls
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+      - release:
+          requires: [build]
+          filters:
+            branches:
+              only: master
