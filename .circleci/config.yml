@@ -35,7 +35,10 @@ jobs:
 
       - run:
           name: Decrypt credentials
-          command: openssl aes-256-cbc -d -in .circleci/credentials.enc credentials -k $CREDENTIALS_KEY
+          command: openssl aes-256-cbc -d \
+                   -in .circleci/credentials.enc \
+                   -out credentials \
+                   -k $SNAPCRAFT_CREDENTIALS_KEY
 
       - run:
           name: Push/release snap
