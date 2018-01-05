@@ -1,4 +1,5 @@
 defaults: &defaults
+  working_directory: ~/workspace
   docker:
     - image: ubuntu:xenial
       environment:
@@ -18,14 +19,14 @@ jobs:
           name: Build snap
           command: snapcraft
       - persist_to_workspace:
-          root: .
+          root: ~/workspace
           paths: ['*.snap']
 
   release:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: .
+          at: ~/workspace
 
       - run:
           name: Push/release snap
