@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install snapcraft
+          name: Install prerequisites
           command: apt update && apt install -y snapcraft
       - run:
           name: Build snap
@@ -25,6 +25,10 @@ jobs:
   release:
     <<: *defaults
     steps:
+      - run:
+          name: Install prerequisites
+          command: apt update && apt install -y ca-certificates
+
       - attach_workspace:
           at: ~/workspace
 
