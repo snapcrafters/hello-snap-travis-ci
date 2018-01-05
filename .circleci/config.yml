@@ -25,16 +25,21 @@ jobs:
   release:
     <<: *defaults
     steps:
+      - checkout
       - run:
           name: Install prerequisites
-          command: apt update && apt install -y ca-certificates
+          command: apt update && apt install -y openssl ca-certificates snapcraft
 
       - attach_workspace:
           at: ~/workspace
 
       - run:
+          name: Decrypt credentials
+          command: openssl aes-256-cbc -d -in .circleci/credentials.enc credentials -k $CREDENTIALS_KEY
+
+      - run:
           name: Push/release snap
-          command: ls
+          command: snapcraft login --with credentials && snapcraft push *.snap --release edge
 
 workflows:
   version: 2
