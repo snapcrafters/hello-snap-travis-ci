@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ubuntu:xenial
+    steps:
+      - checkout
+      - run:
+          name: Install snapcraft
+          command: apt update && apt install -y snapcraft
+      - run:
+          name: Build snap
+          command: snapcraft
+      - run:
+          name: Push/release snap
+          command: ls
