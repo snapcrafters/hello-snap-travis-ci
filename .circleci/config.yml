@@ -32,15 +32,15 @@ jobs:
     steps:
       - checkout
 
-      - attach_workspace:
-          at: ~/workspace
-
       - run:
           name: Install prerequisites
           command: |
             sudo apt update
             sudo apt install -y openssl snapd
             sudo snap install --beta --classic snapcraft
+
+      - attach_workspace:
+          at: ~/workspace
 
       - run:
           name: Decrypt credentials
