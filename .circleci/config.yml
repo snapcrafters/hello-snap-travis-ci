@@ -9,12 +9,15 @@ jobs:
           LANG: C.UTF-8
     steps:
       - checkout
+
       - run:
           name: Install prerequisites
           command: apt update && apt install -y snapcraft
+
       - run:
           name: Build snap
           command: snapcraft
+
       - persist_to_workspace:
           root: ~/workspace
           paths: ['*.snap']
@@ -24,17 +27,20 @@ jobs:
     # Virtual machine instead of docker because we need to install a snap,
     # which doesn't run in docker.
     machine: true
+    environment:
+      PATH: $PATH:/snap/bin
     steps:
       - checkout
+
+      - attach_workspace:
+          at: ~/workspace
+
       - run:
           name: Install prerequisites
           command: |
             sudo apt update
             sudo apt install -y openssl snapd
             sudo snap install --beta --classic snapcraft
-
-      - attach_workspace:
-          at: ~/workspace
 
       - run:
           name: Decrypt credentials
