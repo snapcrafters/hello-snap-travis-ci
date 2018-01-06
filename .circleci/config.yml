@@ -1,15 +1,12 @@
-defaults: &defaults
-  working_directory: ~/workspace
-  docker:
-    - image: ubuntu:xenial
-      environment:
-          LC_ALL: C.UTF-8
-          LANG: C.UTF-8
-
 version: 2
 jobs:
   build:
-    <<: *defaults
+    working_directory: ~/workspace
+    docker:
+      - image: ubuntu:xenial
+        environment:
+          LC_ALL: C.UTF-8
+          LANG: C.UTF-8
     steps:
       - checkout
       - run:
@@ -23,12 +20,18 @@ jobs:
           paths: ['*.snap']
 
   release:
-    <<: *defaults
+    working_directory: ~/workspace
+    # Virtual machine instead of docker because we need to install a snap,
+    # which doesn't run in docker.
+    machine: true
     steps:
       - checkout
       - run:
           name: Install prerequisites
-          command: apt update && apt install -y openssl ca-certificates snapcraft
+          command: |
+            sudo apt update
+            sudo apt install -y openssl snapd
+            sudo snap install --beta snapcraft
 
       - attach_workspace:
           at: ~/workspace
@@ -43,7 +46,9 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: snapcraft login --with credentials && snapcraft push *.snap --release edge
+          command: |
+            snapcraft login --with credentials
+            snapcraft push *.snap --release edge
 
 workflows:
   version: 2
