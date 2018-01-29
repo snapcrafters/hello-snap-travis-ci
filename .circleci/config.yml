@@ -1,18 +1,17 @@
+defaults: &defaults
+  working_directory: ~/workspace
+  docker:
+    - image: snapcore/snapcraft:beta
+      environment:
+        LC_ALL: C.UTF-8
+        LANG: C.UTF-8
+
 version: 2
 jobs:
   build:
-    working_directory: ~/workspace
-    docker:
-      - image: ubuntu:xenial
-        environment:
-          LC_ALL: C.UTF-8
-          LANG: C.UTF-8
+    <<: *defaults
     steps:
       - checkout
-
-      - run:
-          name: Install prerequisites
-          command: apt update && apt install -y snapcraft
 
       - run:
           name: Build snap
@@ -23,10 +22,7 @@ jobs:
           paths: ['*.snap']
 
   release:
-    working_directory: ~/workspace
-    # Virtual machine instead of docker because we need to install a snap,
-    # which doesn't run in docker.
-    machine: true
+    <<: *defaults
     steps:
       - checkout
 
@@ -37,8 +33,7 @@ jobs:
           name: Install prerequisites
           command: |
             sudo apt update
-            sudo apt install -y openssl snapd
-            sudo snap install --beta --classic snapcraft
+            apt install -y openssl
 
       - run:
           name: Decrypt credentials
@@ -51,8 +46,8 @@ jobs:
       - run:
           name: Push/release snap
           command: |
-            /snap/bin/snapcraft login --with credentials
-            /snap/bin/snapcraft push *.snap --release edge
+            snapcraft login --with credentials
+            snapcraft push *.snap --release edge
 
 workflows:
   version: 2
