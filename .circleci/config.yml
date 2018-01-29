@@ -19,7 +19,7 @@ jobs:
 
       - run:
           name: Build snap
-          command: snapcraft
+          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft
 
       - persist_to_workspace:
           root: ~/workspace
@@ -49,11 +49,11 @@ jobs:
 
       - run:
           name: Authenticate snapcraft
-          command: snapcraft login --with credentials
+          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft login --with credentials
 
       - run:
           name: Push/release snap
-          command: snapcraft push *.snap --release edge
+          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft push *.snap --release edge
 
 workflows:
   version: 2
