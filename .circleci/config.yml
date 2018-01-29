@@ -14,6 +14,10 @@ jobs:
       - checkout
 
       - run:
+          name: Update index
+          command: apt update
+
+      - run:
           name: Build snap
           command: snapcraft
 
@@ -44,10 +48,12 @@ jobs:
               -k $SNAPCRAFT_CREDENTIALS_KEY
 
       - run:
+          name: Authenticate snapcraft
+          command: snapcraft login --with credentials
+
+      - run:
           name: Push/release snap
-          command: |
-            snapcraft login --with credentials
-            snapcraft push *.snap --release edge
+          command: snapcraft push *.snap --release edge
 
 workflows:
   version: 2
