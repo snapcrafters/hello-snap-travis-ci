@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/workspace
   docker:
-    - image: snapcore/snapcraft:beta
+    - image: snapcore/snapcraft:edge
       environment:
         LC_ALL: C.UTF-8
         LANG: C.UTF-8
@@ -19,7 +19,7 @@ jobs:
 
       - run:
           name: Build snap
-          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft
+          command: snapcraft
 
       - persist_to_workspace:
           root: ~/workspace
@@ -49,11 +49,11 @@ jobs:
 
       - run:
           name: Authenticate snapcraft
-          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft login --with credentials
+          command: snapcraft login --with credentials
 
       - run:
           name: Push/release snap
-          command: PATH=$PATH:/snap/snapcraft/current/usr/bin snapcraft push *.snap --release edge
+          command: snapcraft push *.snap --release edge
 
 workflows:
   version: 2
