@@ -2,9 +2,6 @@ defaults: &defaults
   working_directory: ~/workspace
   docker:
     - image: snapcore/snapcraft:edge
-      environment:
-        LC_ALL: C.UTF-8
-        LANG: C.UTF-8
 
 version: 2
 jobs:
