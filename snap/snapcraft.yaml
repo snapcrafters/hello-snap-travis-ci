@@ -1,7 +1,8 @@
-name: hello-kyrofa
+name: hello-travis-ci
 version: '2.10'
 summary: GNU Hello, the "hello world" snap
 description: GNU hello prints a friendly greeting.
+base: core18
 grade: stable
 confinement: strict
 
